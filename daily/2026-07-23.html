@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개념노트 · 2026-07-23</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <aside>
+    <div class="brand">📓 개념노트
+      <small>일일 · 2026-07-23</small>
+    </div>
+    <a class="homelink" href="../archive.html">🗂 전체 보관함</a>
+    <nav>
+      <div class="day">오늘의 개념</div>
+      <!-- TOC:START -->
+      <a href="#ros2-basic">① ROS2 핵심 개념 (회사 비유)</a>
+      <a href="#robot-example">② 실제 로봇 시스템 매핑</a>
+      <a href="#io">④ I/O 제어기 (MOXA E1212)</a>
+      <a href="#signal">⑤ PC ↔ I/O ↔ 장치 신호 흐름</a>
+      <!-- TOC:END -->
+    </nav>
+    <button class="themebtn" onclick="toggleTheme()">🌗 라이트/다크 전환</button>
+  </aside>
+
+  <main>
+    <h1>개념노트 · 2026-07-23</h1>
+    <p class="lede">오늘 궁금해서 물어본 개념들을 그림·표·도식으로 정리한 일일 노트입니다.</p>
+
+    <!-- SECTIONS:START -->
+    <section id="ros2-basic">
+      <h2>① ROS2 핵심 개념 — "회사(공장)" 비유</h2>
+      <p>ROS2 시스템 전체를 <b>여러 프로그램이 협력하는 회사</b>로 보면 개념이 한 번에 잡힙니다.</p>
+      <div class="cards">
+        <div class="card"><div class="ic">🧑‍💼</div><b>Node = 직원</b><span>일 하나만 맡는 담당자. 한 명이 죽어도 회사 전체는 안 멈춤.</span></div>
+        <div class="card"><div class="ic">📄</div><b>Message = 서류 양식</b><span>정해진 데이터 포맷. 양식이 맞아야 대화가 통함.</span></div>
+        <div class="card"><div class="ic">📢</div><b>Topic = 게시판</b><span>일방적 방송. 계속 흐르는 데이터(센서·영상).</span></div>
+        <div class="card"><div class="ic">☎️</div><b>Service = 전화 문의</b><span>요청→응답 1:1. 가끔 필요할 때(명령·조회).</span></div>
+        <div class="card"><div class="ic">📦</div><b>Action = 택배 추적</b><span>오래 걸리는 작업 + 중간 경과 + 취소 가능.</span></div>
+        <div class="card"><div class="ic">⚙️</div><b>Parameter = 설정판</b><span>그 직원이 일하는 방식(설정값). 잘 안 바뀜.</span></div>
+      </div>
+      <div class="tablewrap"><table>
+        <tr><th>개념</th><th>비유</th><th>핵심</th></tr>
+        <tr><td><span class="pill b">Node</span></td><td>직원</td><td>일 하나만 맡는 담당자</td></tr>
+        <tr><td><span class="pill b">Message</span></td><td>서류 양식</td><td>정해진 데이터 포맷</td></tr>
+        <tr><td><span class="pill g">Topic</span></td><td>게시판</td><td>일방적 방송, 계속 흐르는 데이터 (센서)</td></tr>
+        <tr><td><span class="pill a">Service</span></td><td>전화 문의</td><td>요청→응답 1:1, 가끔 필요할 때 (명령)</td></tr>
+        <tr><td><span class="pill p">Action</span></td><td>택배 추적</td><td>오래 걸리는 작업 + 경과 보고 + 취소</td></tr>
+        <tr><td><span class="pill b">Parameter</span></td><td>개인 설정판</td><td>그 직원이 일하는 방식(설정값)</td></tr>
+      </table></div>
+      <div class="note g"><b>Topic vs Service 한 줄 기준</b><br>
+        계속 흘러나오는 것(영상·센서) → <b>Topic</b> (게시판에 계속 붙이기)<br>
+        물어보고 답 받아야 하는 것(계산·명령) → <b>Service</b> (전화해서 확인)</div>
+      <div class="note a"><b>Service vs Action</b> — "밸브 열어"처럼 순식간에 끝나면 Service, "로봇암 이동"처럼 몇 초 걸리고 진행률/취소가 필요하면 Action.</div>
+    </section>
+
+    <section id="robot-example">
+      <h2>② 실제 로봇 시스템 매핑</h2>
+      <p>예: <b>카메라로 물체를 보고 → 로봇암으로 집어 → 솔레노이드 밸브(공압 그리퍼)로 작동</b>하는 픽앤플레이스 스테이션.</p>
+      <h3>📢 Topic — 계속 흐르는 데이터</h3>
+      <div class="tablewrap"><table>
+        <tr><th>발행 Node</th><th>Topic</th><th>Message</th><th>구독자</th></tr>
+        <tr><td>센서</td><td><code>/force_sensor</code></td><td>Wrench(힘/토크)</td><td>로봇암1, 관제</td></tr>
+        <tr><td>카메라</td><td><code>/camera/image</code></td><td>Image</td><td>비전처리, 관제</td></tr>
+        <tr><td>로봇암1</td><td><code>/arm1/joint_states</code></td><td>JointState</td><td>관제</td></tr>
+      </table></div>
+      <h3>☎️ Service — 순간적으로 끝나는 명령</h3>
+      <div class="tablewrap"><table>
+        <tr><th>요청 → 담당</th><th>Service</th><th>내용</th></tr>
+        <tr><td>관제 → 밸브</td><td><code>/valve/set</code></td><td>"밸브 열어/닫아" → 즉시 응답 (그리퍼 잡기/놓기)</td></tr>
+        <tr><td>관제 → 카메라</td><td><code>/camera/capture</code></td><td>"지금 한 장 찍어줘" → 사진 1장</td></tr>
+      </table></div>
+      <div class="note"><b>솔레노이드 밸브 = Service의 대표 사례.</b> 열고/닫기가 순식간에 끝나고 답이 바로 옴 (센서처럼 계속 흐르지 않음 → Topic 아님).</div>
+      <h3>📦 Action — 오래 걸림 + 경과 보고</h3>
+      <div class="tablewrap"><table>
+        <tr><th>요청 → 담당</th><th>Action</th><th>흐름</th></tr>
+        <tr><td>관제 → 로봇암1</td><td><code>/arm1/move_to</code></td><td>주문("좌표로 이동") → 경과("60%...") → 완료("도착"), 중간 취소 가능</td></tr>
+      </table></div>
+      <h3>⚙️ Parameter — 각 장비의 설정값</h3>
+      <div class="tablewrap"><table>
+        <tr><th>Node</th><th>Parameter</th><th>값(예)</th></tr>
+        <tr><td>카메라</td><td>resolution / fps / exposure</td><td>1920×1080 / 30 / auto</td></tr>
+        <tr><td>로봇암1</td><td>max_velocity / max_accel</td><td>0.3 m/s / 1.0</td></tr>
+        <tr><td>센서</td><td>force_threshold</td><td>5.0 N</td></tr>
+      </table></div>
+      <h3>🔄 한 사이클 흐름</h3>
+      <div class="diagram"><pre>1. 카메라 ──[Topic /camera/image]──▶ 관제       (물체 스트리밍)
+2. 관제 ──[Service /camera/capture]──▶ 카메라   (정밀 1장 → 좌표 확보)
+3. 관제 ──[Action /arm1/move_to]──▶ 로봇암1     ("물체 위로" 50%..100%)
+4. 센서 ──[Topic /force_sensor]──▶ 관제         (그리퍼 닿는 힘 감지)
+5. 관제 ──[Service /valve/set:OPEN]──▶ 밸브      (공압 그리퍼 잡기)
+6. 관제 ──[Action /arm1/move_to]──▶ 로봇암1     (목표 위치로 이송)
+7. 관제 ──[Service /valve/set:CLOSE]──▶ 밸브     (놓기 → 배치 완료)</pre></div>
+    </section>
+
+    
+
+    <section id="io">
+      <h2>④ I/O 제어기 (MOXA ioLogik E1212)</h2>
+      <p>원격 이더넷 I/O 모듈. 로봇/자동화 시스템에서 컴퓨터와 현장 장치를 잇는 "원격 I/O 브리지" 역할을 하는 장비.</p>
+      <div class="imgslot">📷 여기에 MOXA E1212 제품 사진을 넣으세요 →
+        <br><code>images/</code> 폴더에 저장 후 <code>&lt;img src="../images/e1212.jpg"&gt;</code></div>
+      <div class="tablewrap"><table>
+        <tr><th>항목</th><th>사양</th></tr>
+        <tr><td>제조사/모델</td><td>MOXA <b>ioLogik E1212</b></td></tr>
+        <tr><td>디지털 입력 (DI)</td><td>8채널</td></tr>
+        <tr><td>디지털 출력 (DO)</td><td>8채널</td></tr>
+        <tr><td>통신</td><td>Modbus TCP (이더넷)</td></tr>
+        <tr><td>장착 / 보호</td><td>DIN 레일, 절연(isolation) 내장</td></tr>
+      </table></div>
+      <h3>I/O 제어기의 기능 = "현실 ↔ 컴퓨터 통역기"</h3>
+      <p>컴퓨터는 숫자(0/1)만, 현실 장치는 전기(24V 있음/없음)만 다룸. 이 둘을 잇는 다리.</p>
+      <div class="cards">
+        <div class="card"><div class="ic">🔵</div><b>DO 8ch (출력)</b><span>컴퓨터 → 현실. 밸브 열기, 릴레이 작동, 트리거.</span></div>
+        <div class="card"><div class="ic">🟢</div><b>DI 8ch (입력)</b><span>현실 → 컴퓨터. 스위치·근접센서·TOOL_ID·도어 감지.</span></div>
+        <div class="card"><div class="ic">🌐</div><b>이더넷/Modbus</b><span>멀리서 원격 제어. LAN 한 줄로 확장, 절연으로 노이즈 차단.</span></div>
+      </div>
+      <div class="note a"><b>검토 포인트</b><br>
+        ① E1212는 디지털(ON/OFF) 전용 — 아날로그(힘센서 전압 등)는 별도 모델(E1240/E1260 등) 필요.<br>
+        ② 채널 수(8/8) — 밸브·릴레이·TOOL_ID·도어 합산 후 수량/모델 결정.<br>
+        ③ 밸브·24V 릴레이 직접 구동 가능 여부(출력 전류) 확인, 부족하면 중간 릴레이.</div>
+    </section>
+
+    <section id="signal">
+      <h2>⑤ PC ↔ I/O제어기 ↔ 장치 신호 흐름</h2>
+      <p>구간마다 신호의 <b>언어가 다름</b>. I/O 제어기가 "통신 패킷 ↔ 전기신호"를 통역.</p>
+      <ul>
+        <li><b>PC ↔ I/O제어기</b> : 이더넷 위 디지털 통신 (Modbus TCP 패킷)</li>
+        <li><b>I/O제어기 ↔ 장치</b> : 전기 접점 (24V 있음/없음)</li>
+      </ul>
+      <h3>🔵 출력 방향 (PC → 장치): "밸브 열어"</h3>
+      <div class="diagram"><pre>   PC (ROS2)              MOXA E1212              솔레노이드 밸브
+ ┌──────────┐   Modbus   ┌──────────┐   전기접점   ┌──────────┐
+ │ SetIO.srv│─── TCP ───▶│  DO 3번   │──── 24V ────▶│  밸브 ON  │
+ │ "DO3 ON" │  (이더넷)   │  채널 ON  │  (전선 2가닥) │  (개방)   │
+ └──────────┘            └──────────┘              └──────────┘
+   ① 명령         ② 패킷        ③ 통역       ④ 전기(24V)     ⑤ 동작</pre></div>
+      <h3>🟢 입력 방향 (장치 → PC): "툴 체결됐나?"</h3>
+      <div class="diagram"><pre>   툴 체결 스위치           MOXA E1212               PC (ROS2)
+ ┌──────────┐   전기접점   ┌──────────┐   Modbus   ┌──────────┐
+ │  스위치   │──── 24V ───▶│  DI 1번   │─── TCP ───▶│ReadToolId │
+ │  눌림     │  (전선)      │  = 1 감지 │  (이더넷)   │  = "체결"  │
+ └──────────┘             └──────────┘             └──────────┘</pre></div>
+      <div class="note"><b>중요 — 입력은 PC가 "주는" 게 아니라 "읽는" 것.</b><br>
+        출력(DO): PC가 능동적으로 <b>써넣기(Write)</b> — "3번 켜"<br>
+        입력(DI): PC가 주기적으로 <b>물어보기(Polling)</b> — "지금 입력값 뭐야?" (예: 20~50ms마다)</div>
+      <h3>PC에서 실제로 어떻게? (Modbus 레지스터 읽기/쓰기)</h3>
+      <div class="tablewrap"><table>
+        <tr><th>하는 일</th><th>Modbus 함수코드</th><th>대상</th></tr>
+        <tr><td>입력 읽기 (DI)</td><td><code>0x02</code> Read Discrete Inputs</td><td>Discrete Input</td></tr>
+        <tr><td>출력 주기 (DO)</td><td><code>0x05</code>/<code>0x0F</code> Write Coil(s)</td><td>Coil</td></tr>
+      </table></div>
+      <pre><code>from pymodbus.client import ModbusTcpClient
+client = ModbusTcpClient("192.168.127.254")   # E1212 IP
+client.connect()
+
+# 입력(DI) 읽기: 채널 0부터 8개
+di = client.read_discrete_inputs(address=0, count=8)
+tool_attached = di.bits[1]          # DI 1번 = 툴 체결 스위치
+
+# 출력(DO) 주기: 밸브가 DO 3번에 연결
+client.write_coil(address=3, value=True)    # 밸브 열기 (24V ON)
+client.write_coil(address=3, value=False)   # 밸브 닫기 (OFF)</code></pre>
+      <div class="note a"><b>실무 주의</b><br>
+        ① <b>0-기준 vs 1-기준 주소</b> — 라이브러리/장비마다 ±1 차이, 실제 채널은 테스트로 확인.<br>
+        ② 정확한 레지스터 번지는 <b>MOXA E1212 데이터시트</b>로 확인.<br>
+        ③ 안전 입력(E-STOP, TOOL_ID)은 폴링 지연 = 반응 지연 → E1212의 능동 통지 기능 검토.</div>
+      <div class="note g"><b>한 줄 정리</b><br>
+        <b>PC ↔ I/O제어기</b> = LAN선 위 디지털 대화(Modbus TCP)<br>
+        <b>I/O제어기 ↔ 장치</b> = 전선 위 24V 전기(ON/OFF)<br>
+        I/O 제어기 = 이 둘을 실시간 통역하는 중간 다리.</div>
+    </section>
+    <!-- SECTIONS:END -->
+
+    <hr>
+    <footer>개념노트 일일 · 2026-07-23</footer>
+  </main>
+</div>
+<script>
+  function toggleTheme(){
+    var el=document.documentElement, cur=el.getAttribute('data-theme');
+    var dark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme:dark)').matches;
+    el.setAttribute('data-theme', dark?'light':'dark');
+    try{localStorage.setItem('note-theme', dark?'light':'dark');}catch(e){}
+  }
+  (function(){try{var s=localStorage.getItem('note-theme'); if(s)document.documentElement.setAttribute('data-theme',s);}catch(e){}})();
+</script>
+</body>
+</html>

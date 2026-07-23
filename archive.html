@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개념노트 · 전체 보관함</title>
+<link rel="stylesheet" href="assets/style.css">
+</head><body><div class="wrap">
+<aside>
+  <div class="brand">📓 개념노트<small>전체 보관함</small></div>
+  <a class="homelink" href="index.html">📅 오늘 노트로</a>
+  <nav>
+    <div class="day">보관함</div>
+    <a href="#monthly">월차 요약</a>
+    <a href="#weekly">주차 요약</a>
+    <a href="#daily">일일 (최근 7일)</a>
+  </nav>
+  <button class="themebtn" onclick="toggleTheme()">🌗 라이트/다크 전환</button>
+</aside>
+<main>
+  <h1>🗂 전체 보관함</h1>
+  <p class="lede">최근 7일은 일일 노트, 7일 지나면 주차 요약, 30일 지나면 월차 요약으로 압축됩니다. (생성 기준일 2026-07-23)</p>
+  <section id="monthly"><h2>월차 요약 <span class="tag">영구 보존</span></h2><p class="empty">월차 요약 없음</p></section>
+  <section id="weekly"><h2>주차 요약</h2><p class="empty">주차 요약 없음</p></section>
+  <section id="daily"><h2>일일 노트 <span class="tag">최근 7일</span></h2><div class="arcgrid"><div class="arcrow"><a href="daily/2026-07-23.html">2026-07-23 (목)</a><span class="meta">일일</span></div></div></section>
+  <hr><footer>개념노트 · 보관함 재생성 2026-07-23</footer>
+</main></div>
+<script>
+  function toggleTheme(){var el=document.documentElement,cur=el.getAttribute('data-theme');
+    var dark=cur?cur==='dark':window.matchMedia('(prefers-color-scheme:dark)').matches;
+    el.setAttribute('data-theme',dark?'light':'dark');
+    try{localStorage.setItem('note-theme',dark?'light':'dark');}catch(e){}}
+  (function(){try{var s=localStorage.getItem('note-theme');if(s)document.documentElement.setAttribute('data-theme',s);}catch(e){}})();
+</script></body></html>
