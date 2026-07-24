@@ -16,6 +16,7 @@
       <!-- TOC:START -->
       <a href="#relay-module">① 인터페이스 릴레이 모듈 (PLC-RSC)</a>
       <a href="#frl-unit">② F.R.L. 유닛 (SMC AC 시리즈)</a>
+      <a href="#manifold">③ 솔레노이드 밸브 매니폴드 분류</a>
       <!-- TOC:END -->
     </nav>
     <button class="themebtn" onclick="toggleTheme()">🌗 라이트/다크 전환</button>
@@ -96,6 +97,38 @@
       <div class="diagram"><pre>공장 압축공기 ──▶ [F.R.L. 유닛] ──▶ 솔레노이드 밸브 ──▶ 공압 그리퍼/실린더
   (지저분·고압)     거름·압력조절·윤활     ON/OFF          동작</pre></div>
       <div class="note g"><b>한 줄 정리</b> — 공압 장치가 쓰는 압축공기의 <b>입구 관문</b>. 레귤레이터에서 압력을 세팅하면 그리퍼가 무는 힘이 결정된다.</div>
+    </section>
+
+    <section id="manifold">
+      <h2>③ 솔레노이드 밸브 매니폴드(Manifold) 분류 <span class="tag">2026-07-24</span></h2>
+      <p><b>매니폴드</b> = 솔레노이드 밸브 <b>여러 개를 하나의 베이스에 모아 장착</b>하고, 공기 공급(SUP)·배기(EXH) 통로와 전기 배선을 <b>공통화한 집합 블록</b>. 밸브를 낱개로 배관·배선하는 대신 한 덩어리로 관리 → 배관·배선 대폭 절감.</p>
+      <div class="note"><b>분류의 두 축</b> — ① 전기 배선을 어떻게 모으나(결선 방식), ② 베이스 구조를 어떻게 만드나(증설·교체 편의). SMC 페이지의 "커넥터 타입별" 목록은 ①축.</div>
+
+      <h3>① 전기 배선(결선) 방식별</h3>
+      <div class="tablewrap"><table>
+        <tr><th>분류</th><th>방식</th><th>특징 / 용도</th></tr>
+        <tr><td>커넥터 없음</td><td>밸브마다 리드선 개별 인출</td><td>가장 단순, 소수 밸브</td></tr>
+        <tr><td>단자대(터미널)</td><td>나사 단자대에 현장 배선</td><td>배선 자유도 높음</td></tr>
+        <tr><td>D-sub 커넥터</td><td>표준 D-sub 1개로 집약</td><td>PLC 출력과 케이블 1가닥 연결, 간편</td></tr>
+        <tr><td>플랫 리본 케이블</td><td>납작한 리본 케이블로 집약</td><td>성력화·공간 절약</td></tr>
+        <tr><td>멀티 커넥터</td><td>원형 다핀 커넥터</td><td>착탈 쉬움, 진동 환경</td></tr>
+        <tr><td>시리얼 전송(필드버스/EX)</td><td>여러 밸브를 <b>통신 1선</b>으로 제어</td><td>배선 획기적 감소, 대규모·네트워크(EtherCAT 등)</td></tr>
+      </table></div>
+
+      <h3>② 베이스 구조(배관·증설) 방식별</h3>
+      <div class="tablewrap"><table>
+        <tr><th>분류</th><th>방식</th><th>특징</th></tr>
+        <tr><td>타이로드(Tie-rod)</td><td>여러 스테이션을 관통볼트로 묶어 일체화</td><td>저렴·견고, 증설·교체 시 전체 분해</td></tr>
+        <tr><td>플러그인/스플릿(Split)</td><td>스테이션 <b>개별 착탈(플러그인)</b></td><td>밸브 1개만 증설·교체 쉬움, 유지보수 유리</td></tr>
+        <tr><td>DIN 레일</td><td>DIN 레일에 장착</td><td>착탈·재배치 간편</td></tr>
+        <tr><td>캐스트(Cast)</td><td>주물 공용 급배기 블록</td><td>컴팩트, 고정 스테이션</td></tr>
+      </table></div>
+      <p style="color:var(--muted);font-size:.9rem">호환 밸브 시리즈 예: SY · SV · VQC · VQ · SQ · SJ · VFS 등 (시리즈마다 지원 조합 상이)</p>
+
+      <div class="note g"><b>고를 때 기준 🧭</b><br>
+        • 밸브 수 많음 / 배선 줄이기 → <b>시리얼 전송(필드버스)</b> 또는 D-sub<br>
+        • 자주 증설·교체 → <b>플러그인(스플릿)</b> 구조<br>
+        • 소수·단순·저비용 → 커넥터 없음 + 타이로드</div>
     </section>
     <!-- SECTIONS:END -->
     <hr>
