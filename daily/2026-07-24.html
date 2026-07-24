@@ -15,6 +15,7 @@
       <div class="day">오늘의 개념</div>
       <!-- TOC:START -->
       <a href="#relay-module">① 인터페이스 릴레이 모듈 (PLC-RSC)</a>
+      <a href="#frl-unit">② F.R.L. 유닛 (SMC AC 시리즈)</a>
       <!-- TOC:END -->
     </nav>
     <button class="themebtn" onclick="toggleTheme()">🌗 라이트/다크 전환</button>
@@ -60,6 +61,38 @@
 
       <div class="note g"><b>한 줄 정리</b><br>
         I/O 제어기의 약한 DO 신호로는 큰 부하를 못 켠다 → <b>인터페이스 릴레이(PLC-RSC)</b>가 그 사이에서 신호를 <b>증폭·중계 + 절연</b>하여 250VAC·6A급 부하를 안전하게 스위칭한다.</div>
+    </section>
+
+    <section id="frl-unit">
+      <h2>② F.R.L. 유닛 — 공압 전처리 장치 (SMC AC 시리즈) <span class="tag">2026-07-24</span></h2>
+      <p>압축공기를 <b>거르고 → 압력 맞추고 → (필요시)윤활</b>해서 공압 장치에 공급하는 "공기용 정수기 + 압력조절기". 솔레노이드 밸브·공압 그리퍼·실린더가 제대로 동작하려면 필수인 전처리 관문. (SMC <code>AC20/30/40</code> = Air Combination)</p>
+
+      <div class="imgslot">📷 여기에 SMC AC 시리즈 F.R.L. 사진을 넣으세요 →
+        <br><code>images/</code> 폴더에 저장 후 <code>&lt;img src="../images/frl.jpg"&gt;</code></div>
+
+      <div class="tablewrap"><table>
+        <tr><th>기호</th><th>이름</th><th>기능</th></tr>
+        <tr><td><span class="pill b">F</span></td><td>Filter (필터)</td><td>압축공기 속 <b>수분·먼지·기름때 제거</b>(드레인 배출). 오염물이 밸브·실린더 손상시키는 것 방지</td></tr>
+        <tr><td><span class="pill g">R</span></td><td>Regulator (레귤레이터)</td><td>들쭉날쭉한 공급 압력을 <b>일정 압력으로 낮춰 유지</b>(예: 7bar→5bar). 게이지로 확인</td></tr>
+        <tr><td><span class="pill a">L</span></td><td>Lubricator (루브리케이터)</td><td>공기에 <b>미세 오일 안개</b>를 섞어 하류 부품 윤활 (무급유 부품 많아 F+R 2점 세트로 생략하기도)</td></tr>
+      </table></div>
+
+      <h3>모델 번호 읽는 법</h3>
+      <div class="tablewrap"><table>
+        <tr><th>부분</th><th>의미</th></tr>
+        <tr><td><code>AC</code></td><td>Air Combination (조합)</td></tr>
+        <tr><td><code>20 / 30 / 40</code></td><td>본체 크기(유량 등급), 클수록 대유량</td></tr>
+        <tr><td><code>02 / 03 / 04</code></td><td>포트 크기 (¼" / ⅜" / ½")</td></tr>
+        <tr><td>뒤 문자(E·J·DG·D…)</td><td>게이지·브래킷·자동 드레인 등 옵션</td></tr>
+      </table></div>
+
+      <div class="note p"><b>비유 — "공장 압축공기용 정수기 + 수압조절기" 🚰</b><br>
+        수돗물을 그대로 안 쓰고 <b>정수기(거름) + 수압조절</b>을 거치듯, 공장 압축공기도 이 유닛으로 <b>거르고(F) + 압력 맞추고(R) + 윤활(L)</b> 해서 깨끗하고 안정된 공기를 공압 장치에 공급.</div>
+
+      <h3>로봇 시스템에서의 위치</h3>
+      <div class="diagram"><pre>공장 압축공기 ──▶ [F.R.L. 유닛] ──▶ 솔레노이드 밸브 ──▶ 공압 그리퍼/실린더
+  (지저분·고압)     거름·압력조절·윤활     ON/OFF          동작</pre></div>
+      <div class="note g"><b>한 줄 정리</b> — 공압 장치가 쓰는 압축공기의 <b>입구 관문</b>. 레귤레이터에서 압력을 세팅하면 그리퍼가 무는 힘이 결정된다.</div>
     </section>
     <!-- SECTIONS:END -->
     <hr>
