@@ -17,6 +17,7 @@
       <a href="#relay-module">① 인터페이스 릴레이 모듈 (PLC-RSC)</a>
       <a href="#frl-unit">② F.R.L. 유닛 (SMC AC 시리즈)</a>
       <a href="#manifold">③ 솔레노이드 밸브 매니폴드 분류</a>
+      <a href="#sy5200">④ 5포트 더블 솔레노이드 밸브 (SY5200)</a>
       <!-- TOC:END -->
     </nav>
     <button class="themebtn" onclick="toggleTheme()">🌗 라이트/다크 전환</button>
@@ -129,6 +130,50 @@
         • 밸브 수 많음 / 배선 줄이기 → <b>시리얼 전송(필드버스)</b> 또는 D-sub<br>
         • 자주 증설·교체 → <b>플러그인(스플릿)</b> 구조<br>
         • 소수·단순·저비용 → 커넥터 없음 + 타이로드</div>
+    </section>
+
+    <section id="sy5200">
+      <h2>④ 5포트 2위치 더블 솔레노이드 밸브 (SMC SY5200-5U1-NA) <span class="tag">2026-07-24</span></h2>
+      <p>③ 매니폴드에 꽂히는 <b>밸브 본체</b>. 공기 흐름을 전기로 전환해 <b>복동 실린더·공압 그리퍼</b>를 밀고/당긴다. (SY5000 = 중형 파일럿식 5포트 밸브)</p>
+
+      <div class="imgslot">📷 여기에 SY5200 밸브 사진을 넣으세요 →
+        <br><code>images/</code> 폴더에 저장 후 <code>&lt;img src="../images/sy5200.jpg"&gt;</code></div>
+
+      <h3>모델 번호 해독</h3>
+      <div class="tablewrap"><table>
+        <tr><th>부분</th><th>의미</th></tr>
+        <tr><td><code>SY</code></td><td>SY 시리즈 (파일럿식 5포트 솔레노이드 밸브)</td></tr>
+        <tr><td><code>5000</code></td><td>바디 사이즈 — SY3000 &lt; <b>SY5000</b> &lt; SY7000 (중형)</td></tr>
+        <tr><td><code>SY5<b>2</b>00</code></td><td>3번째 자리 <b>2 = 2위치 더블 솔레노이드</b> (1=싱글, 2=더블, 3·4·5=3위치)</td></tr>
+        <tr><td><code>-5</code></td><td>코일 <b>24V DC</b></td></tr>
+        <tr><td><code>U1</code></td><td>전기접속(커넥터) 방식 — <i>데이터시트 확인</i></td></tr>
+        <tr><td><code>NA</code></td><td>포트/옵션 사양 — <i>확인 권장</i></td></tr>
+      </table></div>
+
+      <h3>"5포트 2위치"란?</h3>
+      <div class="cards">
+        <div class="card"><div class="ic">5️⃣</div><b>5포트</b><span>P(공급)+A·B(실린더 양쪽)+EA·EB(배기 2개). 복동 실린더·그리퍼를 양방향 구동 (5/2 way).</span></div>
+        <div class="card"><div class="ic">↔️</div><b>2위치</b><span>스풀이 좌/우 두 위치로만 전환.</span></div>
+      </div>
+
+      <h3>싱글 vs 더블 (이 밸브의 핵심)</h3>
+      <div class="tablewrap"><table>
+        <tr><th></th><th>싱글 솔레노이드</th><th>더블 솔레노이드 (SY5200)</th></tr>
+        <tr><td>코일</td><td>1개</td><td><b>2개</b></td></tr>
+        <tr><td>동작</td><td>전기 주면 이동, <b>끊으면 스프링 복귀</b></td><td>A펄스→한쪽, B펄스→반대쪽</td></tr>
+        <tr><td>신호</td><td>계속 유지해야 함</td><td><b>순간 펄스면 됨</b></td></tr>
+        <tr><td>정전 시</td><td>원위치 복귀</td><td><b>마지막 위치 유지(메모리/래칭)</b></td></tr>
+      </table></div>
+      <div class="note"><b>더블 = "상태 기억".</b> 신호를 끊어도 마지막 위치를 유지 → 정전·순간 제어에 유리.</div>
+
+      <h3>동작</h3>
+      <div class="diagram"><pre>A코일 ON → 스풀 이동 → P→A 공급, B→EB 배기 → 실린더 전진 (그리퍼 닫힘)
+B코일 ON → 스풀 이동 → P→B 공급, A→EA 배기 → 실린더 후진 (그리퍼 열림)</pre></div>
+
+      <h3>오늘 개념들과 연결</h3>
+      <div class="diagram"><pre>공장공기 →[② F.R.L.]→[③ 매니폴드 위 ④ SY5200 밸브]→ 공압 그리퍼/실린더
+전기신호: PLC/IO 24V →(필요시 ① 릴레이)→ 밸브 코일(A/B)</pre></div>
+      <div class="note g"><b>한 줄 정리</b> — SY5200은 <b>전기 신호로 공기 방향을 전환</b>하는 5/2 더블 밸브. 매니폴드에 모아 꽂고, 24V로 A/B 코일을 펄스 제어해 실린더·그리퍼를 여닫는다.</div>
     </section>
     <!-- SECTIONS:END -->
     <hr>
