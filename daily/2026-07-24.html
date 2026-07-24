@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개념노트 · 2026-07-24</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <aside>
+    <div class="brand">📓 개념노트<small>일일 · 2026-07-24</small></div>
+    <a class="homelink" href="../archive.html">🗂 전체 보관함</a>
+    <nav>
+      <div class="day">오늘의 개념</div>
+      <!-- TOC:START -->
+      <a href="#relay-module">① 인터페이스 릴레이 모듈 (PLC-RSC)</a>
+      <!-- TOC:END -->
+    </nav>
+    <button class="themebtn" onclick="toggleTheme()">🌗 라이트/다크 전환</button>
+  </aside>
+  <main>
+    <h1>개념노트 · 2026-07-24</h1>
+    <p class="lede">오늘 궁금해서 물어본 개념들을 그림·표·도식으로 정리한 일일 노트입니다.</p>
+    <!-- SECTIONS:START -->
+    <section id="relay-module">
+      <h2>① 인터페이스 릴레이 모듈 (Phoenix Contact PLC-RSC-24DC/21) <span class="tag">2026-07-24</span></h2>
+      <p>어제 본 MOXA I/O 제어기 이야기의 <b>"중간 릴레이"가 바로 이 제품</b>. 제어기(PLC·I/O 모듈)의 약한 신호와 실제로 켜야 하는 큰 부하 사이에서 <b>"작은 스위치로 큰 스위치를 누르는"</b> 역할.</p>
+
+      <div class="imgslot">📷 여기에 PLC-RSC-24DC/21 사진을 넣으세요 →
+        <br><code>images/</code> 폴더에 저장 후 <code>&lt;img src="../images/plc-rsc.jpg"&gt;</code></div>
+
+      <div class="tablewrap"><table>
+        <tr><th>항목</th><th>값</th></tr>
+        <tr><td>종류</td><td>인터페이스(커플링) 릴레이 모듈</td></tr>
+        <tr><td>제조사/품번</td><td>Phoenix Contact · 2966171</td></tr>
+        <tr><td>코일 전압</td><td><b>24V DC</b> (제어 신호)</td></tr>
+        <tr><td>접점 구성</td><td><b>1 c/o</b> — 전환접점 1개 (SPDT, <code>/21</code>의 의미)</td></tr>
+        <tr><td>접점 정격</td><td><b>6 A / ~250 V AC</b></td></tr>
+        <tr><td>형태</td><td>6.2mm 초슬림 · DIN 레일 · 플러그인(릴레이 교체 가능)</td></tr>
+      </table></div>
+
+      <h3>기능 2가지</h3>
+      <div class="cards">
+        <div class="card"><div class="ic">🔁</div><b>① 신호 증폭·중계</b><span>24V DC 약한 신호(수십 mA)로 코일을 켜 → 완전히 별개의 큰 회로(250VAC·6A)를 ON/OFF. I/O DO가 힘이 약해 못 켜는 부하를 대신 스위칭.</span></div>
+        <div class="card"><div class="ic">⟂</div><b>② 절연 (Isolation)</b><span>코일(제어) 쪽과 접점(부하) 쪽이 전기적으로 완전 분리. 부하 쪽 서지·노이즈가 제어기(PLC/컴퓨터)로 역류하는 것을 차단.</span></div>
+      </div>
+
+      <div class="note p"><b>비유 — "초인종 버튼으로 대문 여는 것" 🔔</b><br>
+        초인종 <b>버튼</b>(약한 신호)을 누르면 → 무거운 <b>전동 대문 잠금장치</b>(큰 전력)가 열림. 버튼엔 큰 전류가 안 흐르고, 그 사이 <b>릴레이</b>가 큰 회로를 대신 여닫음. 손가락(제어기)은 안전하게 약한 버튼만 누르면 됨.</div>
+
+      <h3>신호 흐름에서의 위치 (I/O 제어기와 연결)</h3>
+      <div class="diagram"><pre>PLC / I/O제어기 DO        릴레이 모듈 (PLC-RSC)         실제 부하
+┌──────────────┐  약신호  ┌──────────────┐   접점    ┌──────────────┐
+│ "DO ON" 24VDC │────────▶│ 코일 여자 →전환 │─────────▶│ 250VAC·6A 부하 │
+│  (소전류)      │         │  ⟂ 절연 ⟂     │  (대전류) │  모터·히터·밸브  │
+└──────────────┘         └──────────────┘           └──────────────┘</pre></div>
+
+      <div class="note"><b>전환접점(c/o)이란?</b> COM(공통) 하나에 NO(평상시 열림)·NC(평상시 닫힘)가 붙어, 코일이 켜지면 연결이 <b>NC→NO로 전환</b>. "켜기"뿐 아니라 "A회로↔B회로 전환"에도 사용.</div>
+
+      <div class="note g"><b>한 줄 정리</b><br>
+        I/O 제어기의 약한 DO 신호로는 큰 부하를 못 켠다 → <b>인터페이스 릴레이(PLC-RSC)</b>가 그 사이에서 신호를 <b>증폭·중계 + 절연</b>하여 250VAC·6A급 부하를 안전하게 스위칭한다.</div>
+    </section>
+    <!-- SECTIONS:END -->
+    <hr>
+    <footer>개념노트 일일 · 2026-07-24</footer>
+  </main>
+</div>
+<script>
+  function toggleTheme(){
+    var el=document.documentElement, cur=el.getAttribute('data-theme');
+    var dark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme:dark)').matches;
+    el.setAttribute('data-theme', dark?'light':'dark');
+    try{localStorage.setItem('note-theme', dark?'light':'dark');}catch(e){}
+  }
+  (function(){try{var s=localStorage.getItem('note-theme'); if(s)document.documentElement.setAttribute('data-theme',s);}catch(e){}})();
+</script>
+</body>
+</html>
